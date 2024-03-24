@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Food Map</string>
+    <string name="next">Next</string>
+    <string name="back_button">back button</string>
+    <string name="arrow_back">arrow_back</string>
+    <string name="where_is_your_location">Where is your location</string>
+    <string name="ring_button">ring button</string>
 </resources>
