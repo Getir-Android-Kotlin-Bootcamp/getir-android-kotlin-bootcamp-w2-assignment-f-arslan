@@ -3,9 +3,11 @@ package com.getir.patika.foodmap
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.View
 import android.widget.SearchView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -22,10 +24,12 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.libraries.places.api.Places
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import com.getir.patika.foodmap.R.string.api_key
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityMainBinding
@@ -40,8 +44,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val view = binding.root
         setContentView(view)
         handleInsets()
+        Places.initialize(applicationContext, getString(api_key))
+
         viewModel.fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(this)
+        viewModel.placesClient = Places.createClient(this)
         viewModel.getCurrentLocation(this)
 
         setupPermissions()
@@ -53,9 +60,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun observeLocationChanges() = scopeWithLifecycle {
         viewModel.uiState.map { it.locationState }.collectLatest {
             when (it) {
-                is LocationState.Error -> {}
-                LocationState.Loading -> {}
+                is LocationState.Error -> {
+                    binding.progressBar.visibility = View.GONE
+                }
+
+                LocationState.Loading -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                }
+
                 is LocationState.Success -> {
+                    binding.progressBar.visibility = View.GONE
                     val location = it.location
                     val latLng = LatLng(location.latitude, location.longitude)
                     mMap.addMarker(MarkerOptions().position(latLng).title("Current Location"))
@@ -69,6 +83,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         scopeWithLifecycle {
             viewModel.uiState.map { it.permissionState }.collectLatest {
                 if (!hasLocationPermission()) {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(
+                            this@MainActivity,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        )
+                    ) {
+                        showRationaleDialog()
+                    }
                     requestLocationPermission()
                     viewModel.onPermissionStateChanged(PermissionState.IDLE)
                 }
@@ -131,6 +152,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+    }
+
+    private fun showRationaleDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Location Permission Required")
+            .setMessage("This app requires location permission to function properly. Please grant the permission.")
+            .setPositiveButton("OK") { _, _ ->
+                requestLocationPermission()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
     }
 
     companion object {

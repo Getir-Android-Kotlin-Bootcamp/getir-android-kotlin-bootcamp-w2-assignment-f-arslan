@@ -16,9 +16,15 @@ enum class PermissionState {
     NEED_REQUEST
 }
 
+data class AutoCompleteResult(
+    val fullText: String,
+    val placeId: String,
+)
+
 data class Location(
     val latitude: Double,
     val longitude: Double,
+    val address: String = "",
 )
 
 sealed interface LocationState {

@@ -13,7 +13,7 @@ googleAndroidLibrariesMapsplatformSecretsGradlePlugin = "2.0.1"
 playServicesMaps = "18.2.0"
 lifecycle_version = "2.7.0"
 playServicesLocation = "21.2.0"
-
+placesKtx = "3.1.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -28,8 +28,8 @@ play-services-maps = { group = "com.google.android.gms", name = "play-services-m
 lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle_version" }
 lifecycle-compiler = { group = "androidx.lifecycle", name = "lifecycle-compiler", version.ref = "lifecycle_version" }
 androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activity" }
-play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }  # Firebase VC
-
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
+places-ktx = { group = "com.google.maps.android" , name = "places-ktx", version.ref = "placesKtx" }
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
