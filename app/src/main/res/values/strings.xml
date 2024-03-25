@@ -5,7 +5,10 @@
     <string name="arrow_back">arrow_back</string>
     <string name="where_is_your_location">Where is your location</string>
     <string name="ring_button">ring button</string>
-
+    <string name="location_dialog_title">Location Permission Required</string>
+    <string name="location_dialog_message">This app requires location permission to function properly. Please grant the permission.</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 
     <string name="api_key">AIzaSyAtDzn22GbQUw-kKjvr_RExXqyuXjEsdHE</string>
 </resources>
