@@ -11,4 +11,7 @@
     <string name="cancel">Cancel</string>
 
     <string name="api_key">AIzaSyAtDzn22GbQUw-kKjvr_RExXqyuXjEsdHE</string>
+    <string name="your_location">Your Location</string>
+    <string name="pin">pin</string>
+    <string name="set_location">Set Location</string>
 </resources>
