@@ -8,13 +8,17 @@ data class MapUiState(
         Location(latitude = -34.0, longitude = 151.0)
     ),
     val permissionState: PermissionState = PermissionState.DENIED,
-    val address: String = ""
 )
 
 enum class PermissionState {
     IDLE,
     DENIED,
     NEED_REQUEST
+}
+
+enum class SearchType {
+    Current,
+    Global
 }
 
 data class AutoCompleteResult(
@@ -25,7 +29,8 @@ data class AutoCompleteResult(
 data class Location(
     val latitude: Double,
     val longitude: Double,
-    val address: String = ""
+    val address: String = "",
+    val name: String = ""
 )
 
 sealed interface LocationState {

@@ -7,10 +7,10 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.Priority
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
+import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,24 +51,20 @@ class MapViewModel : BaseViewModel() {
         }
         _uiState.update { it.copy(locationState = LocationState.Loading) }
 
-        fusedLocationProviderClient
-            .getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
-            .addOnSuccessListener { location ->
-                location
-                    ?.run {
+        val placeFields = listOf(Place.Field.LAT_LNG, Place.Field.ADDRESS, Place.Field.NAME)
+        val request = FindCurrentPlaceRequest.newInstance(placeFields)
+        placesClient.findCurrentPlace(request)
+            .addOnSuccessListener { response ->
+                response?.let { findCurrentPlaceResponse ->
+                    findCurrentPlaceResponse.placeLikelihoods.firstOrNull()?.place?.run {
                         _uiState.update {
-                            it.copy(
-                                locationState = LocationState.Success(Location(latitude, longitude))
-                            )
+                            it.copy(locationState = toLocationState())
                         }
                     }
-                    ?: _uiState.update { it.copy(locationState = LocationState.Error("Location not found")) }
-            }.addOnFailureListener { exception ->
-                _uiState.update {
-                    it.copy(
-                        locationState = LocationState.Error(exception.message ?: "Unknown error")
-                    )
-                }
+                } ?: Log.e("MapViewModel", "Place not found")
+            }
+            .addOnFailureListener {
+                Log.e("MapViewModel", "An error occurred", it)
             }
     }
 
@@ -98,32 +94,26 @@ class MapViewModel : BaseViewModel() {
     }
 
     fun getCoordinates(autoCompleteResult: AutoCompleteResult) = launchCatching {
-        val placeFields = listOf(Place.Field.LAT_LNG, Place.Field.ADDRESS)
+        val placeFields = listOf(Place.Field.LAT_LNG, Place.Field.ADDRESS, Place.Field.NAME)
         val request = FetchPlaceRequest.newInstance(autoCompleteResult.placeId, placeFields)
         placesClient.fetchPlace(request)
             .addOnSuccessListener { response ->
                 response?.let { fetchPlaceResponse ->
                     fetchPlaceResponse.place.run {
-                        val latitude = latLng?.latitude
-                            ?: throw IllegalStateException("Latitude not found")
-                        val longitude = latLng?.longitude
-                            ?: throw IllegalStateException("Longitude not found")
-                        val address =
-                            address ?: throw IllegalStateException("Address not found")
-                        _autoCompleteResults.update { emptyList() }
                         _uiState.update {
-                            it.copy(
-                                locationState = LocationState.Success(
-                                    Location(latitude, longitude, address)
-                                ),
-                                query = ""
-                            )
+                            it.copy(locationState = toLocationState(), query = "")
                         }
+                        _autoCompleteResults.update { emptyList() }
                     }
                 } ?: Log.e("MapViewModel", "Place not found")
             }
             .addOnFailureListener {
                 Log.e("MapViewModel", "An error occurred", it)
             }
+    }
+
+    private fun Place.toLocationState(): LocationState {
+        val latLng = requireNotNull(latLng) { "Latitude and longitude must not be null" }
+        return LocationState.Success(Location(latLng.latitude, latLng.longitude, address ?: "", name ?: ""))
     }
 }

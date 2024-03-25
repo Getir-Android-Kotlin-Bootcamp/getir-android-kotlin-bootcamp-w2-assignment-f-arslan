@@ -1,9 +1,11 @@
 package com.getir.patika.foodmap
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -24,6 +26,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
 import kotlinx.coroutines.CoroutineScope
@@ -62,14 +65,22 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun setupRecycleView() = scopeWithLifecycle {
         binding.recycleViewSearchResult.layoutManager = LinearLayoutManager(this@MainActivity)
+
         viewModel.autoCompleteResults.collectLatest { results ->
-            println(results)
             binding.recycleViewSearchResult.adapter = AddressAdapter(results) {
+                val focus = binding.searchView.findFocus()
+                focus?.let { view ->
+                    val inputMethodManager =
+                        getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                    inputMethodManager?.hideSoftInputFromWindow(view.windowToken, 0)
+                    view.clearFocus()
+                }
                 viewModel.getCoordinates(it)
             }
         }
     }
 
+    private var currentMarker: Marker? = null
     private fun observeLocationChanges() = scopeWithLifecycle {
         viewModel.uiState.map { it.locationState }.collectLatest {
             when (it) {
@@ -84,8 +95,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 is LocationState.Success -> {
                     binding.progressBar.visibility = View.GONE
                     val location = it.location
+                    binding.tvYourLocationDetail.text = location.address
                     val latLng = LatLng(location.latitude, location.longitude)
-                    mMap.addMarker(MarkerOptions().position(latLng).title("Current Location"))
+                    currentMarker?.remove()
+                    currentMarker =
+                        mMap.addMarker(MarkerOptions().position(latLng).title(location.name))
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
                 }
             }
