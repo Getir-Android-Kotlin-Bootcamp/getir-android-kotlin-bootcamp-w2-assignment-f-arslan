@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-
 class MapViewModel : BaseViewModel() {
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     lateinit var placesClient: PlacesClient
@@ -74,37 +73,57 @@ class MapViewModel : BaseViewModel() {
     }
 
     private var searchJob: Job? = null
-    private fun searchPlaces(query: String) = launchCatching {
+    private fun searchPlaces(query: String) {
         searchJob?.cancel()
         _autoCompleteResults.update { emptyList() }
 
-        val request = FindAutocompletePredictionsRequest
-            .builder()
-            .setQuery(query)
-            .build()
-        placesClient
-            .findAutocompletePredictions(request)
-            .addOnSuccessListener { response ->
-                _autoCompleteResults.update {
-                    response.autocompletePredictions.map {
-                        AutoCompleteResult(it.getFullText(null).toString(), it.placeId)
-                    }.take(5)
+        searchJob = launchCatching {
+            val request = FindAutocompletePredictionsRequest
+                .builder()
+                .setQuery(query)
+                .build()
+            placesClient
+                .findAutocompletePredictions(request)
+                .addOnSuccessListener { response ->
+                    _autoCompleteResults.update {
+                        response.autocompletePredictions.map {
+                            AutoCompleteResult(it.getFullText(null).toString(), it.placeId)
+                        }.take(5)
+                    }
+                }.addOnFailureListener {
+                    _autoCompleteResults.update { emptyList() }
+                    Log.e("MapViewModel", "An error occurred", it)
                 }
-            }.addOnFailureListener {
-                _autoCompleteResults.update { emptyList() }
+        }
+    }
+
+    fun getCoordinates(autoCompleteResult: AutoCompleteResult) = launchCatching {
+        val placeFields = listOf(Place.Field.LAT_LNG, Place.Field.ADDRESS)
+        val request = FetchPlaceRequest.newInstance(autoCompleteResult.placeId, placeFields)
+        placesClient.fetchPlace(request)
+            .addOnSuccessListener { response ->
+                response?.let { fetchPlaceResponse ->
+                    fetchPlaceResponse.place.run {
+                        val latitude = latLng?.latitude
+                            ?: throw IllegalStateException("Latitude not found")
+                        val longitude = latLng?.longitude
+                            ?: throw IllegalStateException("Longitude not found")
+                        val address =
+                            address ?: throw IllegalStateException("Address not found")
+                        _autoCompleteResults.update { emptyList() }
+                        _uiState.update {
+                            it.copy(
+                                locationState = LocationState.Success(
+                                    Location(latitude, longitude, address)
+                                ),
+                                query = ""
+                            )
+                        }
+                    }
+                } ?: Log.e("MapViewModel", "Place not found")
+            }
+            .addOnFailureListener {
                 Log.e("MapViewModel", "An error occurred", it)
             }
     }
-
-    private fun getCoordinates(autoCompleteResult: AutoCompleteResult) =
-        launchCatching {
-            val placeFields = listOf(Place.Field.LAT_LNG)
-            val request = FetchPlaceRequest.newInstance(autoCompleteResult.placeId, placeFields)
-            placesClient.fetchPlace(request)
-                .addOnSuccessListener { response ->
-                    response?.let { fetchPlaceResponse ->
-                        fetchPlaceResponse.place.also(::println)
-                    }
-                }
-        }
 }

@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.getir.patika.foodmap.databinding.ActivityMainBinding
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -29,7 +30,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import com.getir.patika.foodmap.R.string.api_key
+import com.getir.patika.foodmap.R.string as AppText
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityMainBinding
@@ -44,7 +45,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val view = binding.root
         setContentView(view)
         handleInsets()
-        Places.initialize(applicationContext, getString(api_key))
+        Places.initialize(applicationContext, getString(AppText.api_key))
 
         viewModel.fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(this)
@@ -52,9 +53,21 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         viewModel.getCurrentLocation(this)
 
         setupPermissions()
-        searchViewOperations()
         setupMap()
+        setupRecycleView()
+
+        searchViewOperations()
         observeLocationChanges()
+    }
+
+    private fun setupRecycleView() = scopeWithLifecycle {
+        binding.recycleViewSearchResult.layoutManager = LinearLayoutManager(this@MainActivity)
+        viewModel.autoCompleteResults.collectLatest { results ->
+            println(results)
+            binding.recycleViewSearchResult.adapter = AddressAdapter(results) {
+                viewModel.getCoordinates(it)
+            }
+        }
     }
 
     private fun observeLocationChanges() = scopeWithLifecycle {
@@ -138,8 +151,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         })
 
         scopeWithLifecycle {
-            viewModel.uiState.collectLatest { uiState ->
-                binding.searchView.setQuery(uiState.query, false)
+            viewModel.uiState.map { it.query }.collectLatest { query ->
+                binding.searchView.setQuery(query, false)
             }
         }
     }
@@ -156,12 +169,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun showRationaleDialog() {
         AlertDialog.Builder(this)
-            .setTitle("Location Permission Required")
-            .setMessage("This app requires location permission to function properly. Please grant the permission.")
-            .setPositiveButton("OK") { _, _ ->
+            .setTitle(getString(AppText.location_dialog_title))
+            .setMessage(getString(AppText.location_dialog_message))
+            .setPositiveButton(getString(AppText.ok)) { _, _ ->
                 requestLocationPermission()
             }
-            .setNegativeButton("Cancel") { dialog, _ ->
+            .setNegativeButton(getString(AppText.cancel)) { dialog, _ ->
                 dialog.dismiss()
             }
             .create()
