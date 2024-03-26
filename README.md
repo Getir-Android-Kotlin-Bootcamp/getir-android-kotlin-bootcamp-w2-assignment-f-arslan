@@ -1,10 +1,10 @@
 # Getir Android Kotlin Bootcamp w2 Assignment
 
 <div align="center">
-<img src="public/demo.gif">
+<img src="public/demo.gif" height="700" alt="Demo">
 </div>
 
-### If you want to check the video, [click here](public/demo.mp4)
+###  If you want to check the video, [click here](public/demo.mp4)
 
 ---
 
