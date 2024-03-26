@@ -4,37 +4,39 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.Canvas
+import android.graphics.Typeface
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.getir.patika.foodmap.data.ext.toBitmapDescriptor
 import com.getir.patika.foodmap.databinding.ActivityMainBinding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
@@ -42,6 +44,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import com.getir.patika.foodmap.R.string as AppText
+import com.getir.patika.foodmap.R.drawable as AppDrawable
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -89,11 +92,36 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             btnSetLocation.setOnClickListener {
                 makeToast(AppText.set_location_button_click)
             }
+
+            configureSearchViewFontFamily()
         }
     }
 
-    private fun makeToast(@StringRes text: Int) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+    private fun ActivityMainBinding.configureSearchViewFontFamily() {
+        val id =
+            searchView.context.resources.getIdentifier("android:id/search_src_text", null, null)
+        val queryText = searchView.findViewById<TextView>(id)
+        println(queryText.text)
+        val font = Typeface.createFromAsset(assets, "fonts/poppins_medium.ttf")
+        queryText.typeface = font
+    }
+
+    private fun makeToast(@StringRes textId: Int) {
+        Toast.makeText(this, textId, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun makeSnackbar(text: String) {
+        val snackbar = Snackbar.make(binding.root, text, Snackbar.LENGTH_SHORT)
+        val snackbarView = snackbar.view
+        val params = snackbarView.layoutParams as ViewGroup.MarginLayoutParams
+        params.setMargins(
+            params.leftMargin,
+            params.topMargin,
+            params.rightMargin,
+            params.bottomMargin + 128
+        )
+        snackbarView.layoutParams = params
+        snackbar.show()
     }
 
     private fun checkLocationPermission(action: () -> Unit) {
@@ -121,16 +149,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private var currentMarker: Marker? = null
-
     private fun observeLocationChanges() = scopeWithLifecycle {
-        val icon: BitmapDescriptor = bitmapDescriptorFromVector(R.drawable.pin)
-
+        val pinIcon: BitmapDescriptor = AppDrawable.pin.toBitmapDescriptor(this@MainActivity)
         viewModel.uiState.map { it.locationResult }.distinctUntilChanged()
             .collectLatest {
                 when (it) {
                     is LocationResult.Error -> {
                         binding.progressBar.visibility = View.GONE
                         binding.tvYourLocationDetail.visibility = View.VISIBLE
+                        makeSnackbar(it.errorMessage)
                     }
 
                     LocationResult.Loading -> {
@@ -141,13 +168,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     is LocationResult.Success -> {
                         binding.progressBar.visibility = View.GONE
                         binding.tvYourLocationDetail.visibility = View.VISIBLE
+
                         val location = it.location
                         binding.tvYourLocationDetail.text = location.address
                         val latLng = LatLng(location.latitude, location.longitude)
                         clearMarkers()
+
                         currentMarker =
                             mMap.addMarker(
-                                MarkerOptions().position(latLng).title(location.name).icon(icon)
+                                MarkerOptions().position(latLng).title(location.name).icon(pinIcon)
                             )
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
                     }
@@ -160,24 +189,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun clearMarkers() {
         currentMarker?.remove()
         initialMarker?.remove()
-    }
-
-    private fun bitmapDescriptorFromVector(vectorResId: Int): BitmapDescriptor {
-        val vectorDrawable = ContextCompat.getDrawable(this, vectorResId)
-        vectorDrawable!!.setBounds(
-            0,
-            0,
-            vectorDrawable.intrinsicWidth,
-            vectorDrawable.intrinsicHeight
-        )
-        val bitmap = Bitmap.createBitmap(
-            vectorDrawable.intrinsicWidth,
-            vectorDrawable.intrinsicHeight,
-            Bitmap.Config.ARGB_8888
-        )
-        val canvas = Canvas(bitmap)
-        vectorDrawable.draw(canvas)
-        return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 
     private fun setupMap() {
@@ -220,7 +231,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var initialMarker: Marker? = null
     override fun onMapReady(googleMap: GoogleMap) {
-        val icon: BitmapDescriptor = bitmapDescriptorFromVector(R.drawable.pin)
+        val pinIcon: BitmapDescriptor = AppDrawable.pin.toBitmapDescriptor(this@MainActivity)
         mMap = googleMap
         val latLng = LatLng(41.0082, 28.9784)
         googleMap.uiSettings.isCompassEnabled = false
@@ -228,7 +239,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             GoogleMap.CancelableCallback {
             override fun onFinish() {
                 initialMarker = googleMap.addMarker(
-                    MarkerOptions().position(latLng).title("Istanbul").icon(icon)
+                    MarkerOptions().position(latLng).title("Istanbul").icon(pinIcon)
                 )
             }
 
