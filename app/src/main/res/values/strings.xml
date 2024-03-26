@@ -8,7 +8,7 @@
     <string name="location_dialog_title">Permission Required</string>
     <string name="location_dialog_message">This app requires location permission to function properly. Please grant the permission.</string>
     <string name="greeting_dialog_title">Location Access Needed</string>
-    <string name="greeting_dialog_message">To quickly find your current location and improve your experience, we need location permissions. Grant access?</string>
+    <string name="greeting_dialog_message">To quickly find your current location and improve your experience, we need location permissions. \n\nFor better results, choose Precise location. Grant access?</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="open_settings">Open Settings</string>

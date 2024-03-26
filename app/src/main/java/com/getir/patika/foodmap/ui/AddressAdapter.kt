@@ -1,4 +1,4 @@
-package com.getir.patika.foodmap
+package com.getir.patika.foodmap.ui
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.getir.patika.foodmap.R
 import com.google.android.material.divider.MaterialDivider
 
 class AddressAdapter(

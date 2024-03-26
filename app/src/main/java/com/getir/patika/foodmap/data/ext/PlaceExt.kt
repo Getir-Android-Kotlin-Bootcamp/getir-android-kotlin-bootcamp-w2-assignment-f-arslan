@@ -1,7 +1,7 @@
 package com.getir.patika.foodmap.data.ext
 
-import com.getir.patika.foodmap.Location
-import com.getir.patika.foodmap.LocationResult
+import com.getir.patika.foodmap.ui.Location
+import com.getir.patika.foodmap.ui.LocationResult
 import com.google.android.libraries.places.api.model.Place
 
 fun Place.toLocationState(): LocationResult {
