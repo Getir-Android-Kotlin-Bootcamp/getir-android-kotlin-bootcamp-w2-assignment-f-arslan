@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.divider.MaterialDivider
 
 class AddressAdapter(
     private val addresses: List<AutoCompleteResult>,
@@ -31,10 +32,16 @@ class AddressAdapter(
 
     override fun onBindViewHolder(holder: AddressViewHolder, position: Int) {
         holder.addressTv.text = addresses[position].fullText
+
+        val isLastItem = position == addresses.size - 1
+        holder.divider.visibility = if (isLastItem) View.GONE else View.VISIBLE
+        holder.viewPlaceholder.visibility = if (isLastItem) View.VISIBLE else View.GONE
     }
 
     class AddressViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val addressLayout = view.findViewById<RelativeLayout>(R.id.layout_address)
-        val addressTv = view.findViewById<TextView>(R.id.tvAddress)
+        val addressLayout: RelativeLayout = view.findViewById(R.id.layout_address)
+        val addressTv: TextView = view.findViewById(R.id.tvAddress)
+        val divider: MaterialDivider = view.findViewById(R.id.address_divider)
+        val viewPlaceholder: View = view.findViewById(R.id.view_placeholder)
     }
 }

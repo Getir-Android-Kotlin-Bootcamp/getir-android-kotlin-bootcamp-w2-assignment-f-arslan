@@ -19,9 +19,17 @@
         tools:text="address" />
 
     <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/address_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/tvAddress"
         android:layout_marginTop="8dp" />
+
+    <View
+        android:id="@+id/view_placeholder"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        android:layout_below="@id/address_divider"
+        android:visibility="gone" />
 
 </RelativeLayout>
