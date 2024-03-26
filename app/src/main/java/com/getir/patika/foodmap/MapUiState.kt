@@ -4,22 +4,10 @@ data class MapUiState(
     val isLoading: Boolean = false,
     val errorMessage: String = "",
     val query: String = "",
-    val locationState: LocationState = LocationState.Success(
-        Location(latitude = -34.0, longitude = 151.0)
-    ),
-    val permissionState: PermissionState = PermissionState.DENIED,
+    val locationResult: LocationResult = LocationResult.Idle,
+    val currentLocationResult: LocationResult = LocationResult.Idle,
+    val dialogState: Boolean = false,
 )
-
-enum class PermissionState {
-    IDLE,
-    DENIED,
-    NEED_REQUEST
-}
-
-enum class SearchType {
-    Current,
-    Global
-}
 
 data class AutoCompleteResult(
     val fullText: String,
@@ -33,8 +21,9 @@ data class Location(
     val name: String = ""
 )
 
-sealed interface LocationState {
-    data object Loading : LocationState
-    data class Success(val location: Location) : LocationState
-    data class Error(val errorMessage: String) : LocationState
+sealed class LocationResult {
+    data object Idle: LocationResult()
+    data object Loading : LocationResult()
+    data class Success(val location: Location) : LocationResult()
+    data class Error(val errorMessage: String) : LocationResult()
 }
