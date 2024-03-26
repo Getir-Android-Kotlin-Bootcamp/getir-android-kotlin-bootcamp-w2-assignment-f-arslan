@@ -1,23 +1,13 @@
-package com.getir.patika.foodmap
+package com.getir.patika.foodmap.ui
 
 import android.Manifest
-import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Typeface
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
-import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
@@ -25,6 +15,12 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.getir.patika.foodmap.R
+import com.getir.patika.foodmap.data.ext.greetingRationaleDialog
+import com.getir.patika.foodmap.data.ext.makeSnackbar
+import com.getir.patika.foodmap.data.ext.makeToast
+import com.getir.patika.foodmap.data.ext.openSettingsRationaleDialog
+import com.getir.patika.foodmap.data.ext.setCustomFont
 import com.getir.patika.foodmap.data.ext.toBitmapDescriptor
 import com.getir.patika.foodmap.databinding.ActivityMainBinding
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -35,30 +31,40 @@ import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import com.getir.patika.foodmap.R.string as AppText
 import com.getir.patika.foodmap.R.drawable as AppDrawable
+import com.getir.patika.foodmap.R.string as AppText
 
+/**
+ * Main activity of the application, serving as the primary interface for user interactions
+ * with the map and location features.
+ *
+ * This activity handles map initialization, location permissions, user input through a search view,
+ * and displays location-related information and markers on the map.
+ */
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
+
     private lateinit var binding: ActivityMainBinding
     private lateinit var mMap: GoogleMap
 
     val viewModel: MapViewModel by viewModels()
 
+    /**
+     * Initializes the activity, sets up the map, and configures UI interactions.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
         handleInsets()
         setupMap()
         setupActivity()
@@ -71,10 +77,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         observeAutoCompleteResults()
 
-        searchViewOperations()
-        observeLocationChanges()
-
         binding.run {
+            observeLocationChanges()
+
+            searchView.observeSearchViewChanges()
+
             ibMyLocation.setOnClickListener {
                 checkLocationPermission {
                     viewModel.getCurrentLocation()
@@ -93,42 +100,25 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 makeToast(AppText.set_location_button_click)
             }
 
-            configureSearchViewFontFamily()
+            searchView.setCustomFont()
         }
     }
 
-    private fun ActivityMainBinding.configureSearchViewFontFamily() {
-        val id =
-            searchView.context.resources.getIdentifier("android:id/search_src_text", null, null)
-        val queryText = searchView.findViewById<TextView>(id)
-        println(queryText.text)
-        val font = Typeface.createFromAsset(assets, "fonts/poppins_medium.ttf")
-        queryText.typeface = font
-    }
-
-    private fun makeToast(@StringRes textId: Int) {
-        Toast.makeText(this, textId, Toast.LENGTH_SHORT).show()
-    }
-
-    private fun makeSnackbar(text: String) {
-        val snackbar = Snackbar.make(binding.root, text, Snackbar.LENGTH_SHORT)
-        val snackbarView = snackbar.view
-        val params = snackbarView.layoutParams as ViewGroup.MarginLayoutParams
-        params.setMargins(
-            params.leftMargin,
-            params.topMargin,
-            params.rightMargin,
-            params.bottomMargin + 128
-        )
-        snackbarView.layoutParams = params
-        snackbar.show()
-    }
-
+    /**
+     * Checks if the location permission has been granted and executes the provided action if so.
+     * Otherwise, it shows the appropriate rationale dialog to the user.
+     *
+     * @param action The action to execute if the location permission is granted.
+     */
     private fun checkLocationPermission(action: () -> Unit) {
         val dialogState = viewModel.dialogState
         when {
             hasLocationPermission() -> action()
-            !dialogState -> greetingRationaleDialog()
+            !dialogState -> greetingRationaleDialog {
+                viewModel.setDialogState()
+                requestMultiplePermissions()
+            }
+
             else -> openSettingsRationaleDialog()
         }
     }
@@ -139,7 +129,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 val focus = binding.searchView.findFocus()
                 focus?.let { view ->
                     val inputMethodManager =
-                        getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                        getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
                     inputMethodManager?.hideSoftInputFromWindow(view.windowToken, 0)
                     view.clearFocus()
                 }
@@ -149,28 +139,28 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private var currentMarker: Marker? = null
-    private fun observeLocationChanges() = scopeWithLifecycle {
+    private fun ActivityMainBinding.observeLocationChanges() = scopeWithLifecycle {
         val pinIcon: BitmapDescriptor = AppDrawable.pin.toBitmapDescriptor(this@MainActivity)
         viewModel.uiState.map { it.locationResult }.distinctUntilChanged()
             .collectLatest {
                 when (it) {
                     is LocationResult.Error -> {
-                        binding.progressBar.visibility = View.GONE
-                        binding.tvYourLocationDetail.visibility = View.VISIBLE
+                        progressBar.visibility = View.GONE
+                        tvYourLocationDetail.visibility = View.VISIBLE
                         makeSnackbar(it.errorMessage)
                     }
 
                     LocationResult.Loading -> {
-                        binding.tvYourLocationDetail.visibility = View.GONE
-                        binding.progressBar.visibility = View.VISIBLE
+                        tvYourLocationDetail.visibility = View.GONE
+                        progressBar.visibility = View.VISIBLE
                     }
 
                     is LocationResult.Success -> {
-                        binding.progressBar.visibility = View.GONE
-                        binding.tvYourLocationDetail.visibility = View.VISIBLE
+                        progressBar.visibility = View.GONE
+                        tvYourLocationDetail.visibility = View.VISIBLE
 
                         val location = it.location
-                        binding.tvYourLocationDetail.text = location.address
+                        tvYourLocationDetail.text = location.address
                         val latLng = LatLng(location.latitude, location.longitude)
                         clearMarkers()
 
@@ -196,6 +186,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment?.getMapAsync(this)
     }
 
+    /**
+     * Handles window insets for the activity's view, adjusting padding to accommodate system bars.
+     */
     private fun handleInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -204,8 +197,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun searchViewOperations() {
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+    private fun SearchView.observeSearchViewChanges() {
+        setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return true
             }
@@ -218,11 +211,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         scopeWithLifecycle {
             viewModel.uiState.map { it.query }.distinctUntilChanged().collectLatest { query ->
-                binding.searchView.setQuery(query, false)
+                setQuery(query, false)
             }
         }
     }
 
+    /**
+     * Creates a coroutine scope tied to the activity's lifecycle for executing suspending block of code.
+     *
+     * @param block The suspending block of code to execute within the lifecycle scope.
+     */
     private fun scopeWithLifecycle(block: suspend CoroutineScope.() -> Unit) {
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED, block = block)
@@ -230,6 +228,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private var initialMarker: Marker? = null
+
+    /**
+     * Callback method when the map is ready to be used. Sets up initial map configurations and markers.
+     *
+     * @param googleMap The GoogleMap instance ready for use.
+     */
     override fun onMapReady(googleMap: GoogleMap) {
         val pinIcon: BitmapDescriptor = AppDrawable.pin.toBitmapDescriptor(this@MainActivity)
         mMap = googleMap
@@ -247,39 +251,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         })
     }
 
-    private fun openSettingsRationaleDialog() {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(getString(AppText.location_dialog_title))
-            .setMessage(getString(AppText.location_dialog_message))
-            .setIcon(R.drawable.info)
-            .setPositiveButton(getString(AppText.open_settings)) { dialog, _ ->
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                    data = Uri.fromParts("package", packageName, null)
-                }
-                dialog.dismiss()
-                startActivity(intent)
-            }
-            .setNegativeButton(getString(AppText.cancel)) { dialog, _ ->
-                dialog.dismiss()
-            }
-            .create()
-            .show()
-    }
-
-    private fun greetingRationaleDialog() {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(getString(AppText.greeting_dialog_title))
-            .setMessage(getString(AppText.greeting_dialog_message))
-            .setIcon(R.drawable.waving_hand)
-            .setPositiveButton(getString(AppText.ok)) { dialog, _ ->
-                viewModel.setDialogState()
-                requestMultiplePermissions()
-                dialog.dismiss()
-            }
-            .create()
-            .show()
-    }
-
     private fun requestMultiplePermissions() {
         requestPermissions(
             arrayOf(FINE_LOCATION, COARSE_LOCATION),
@@ -287,6 +258,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         )
     }
 
+    /**
+     * Handles the result of the location permission request.
+     */
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,

@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.location.LocationManager
 import android.util.Log
-import com.getir.patika.foodmap.AutoCompleteResult
-import com.getir.patika.foodmap.LocationResult
+import com.getir.patika.foodmap.ui.AutoCompleteResult
+import com.getir.patika.foodmap.ui.LocationResult
 import com.getir.patika.foodmap.data.LocationRepository
 import com.getir.patika.foodmap.data.ext.toLocationState
 import com.google.android.libraries.places.api.model.Place
@@ -19,6 +19,14 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+/**
+ * A data source for location-related operations, implementing the [LocationRepository] interface.
+ * This class uses the Places API client to fetch location data.
+ *
+ * @property placesClient The Places API client used for location operations.
+ * @property ioDispatcher The coroutine dispatcher for performing IO operations.
+ * @property context The application context.
+ */
 class LocationDataSource @Inject constructor(
     private val placesClient: PlacesClient,
     private val ioDispatcher: CoroutineDispatcher,
@@ -81,6 +89,7 @@ class LocationDataSource @Inject constructor(
 
             completableDeferred.await()
         }
+
 
     override suspend fun searchPlaces(query: String): List<AutoCompleteResult> =
         withContext(ioDispatcher) {

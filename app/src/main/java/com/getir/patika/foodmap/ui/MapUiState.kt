@@ -1,4 +1,4 @@
-package com.getir.patika.foodmap
+package com.getir.patika.foodmap.ui
 
 data class MapUiState(
     val isLoading: Boolean = false,

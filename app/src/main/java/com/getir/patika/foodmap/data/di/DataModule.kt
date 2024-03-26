@@ -26,6 +26,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import javax.inject.Singleton
 
+/**
+ * A Hilt module that provides data-related dependencies for the application.
+ * This includes the Places API client, Preferences DataStore, and a coroutine dispatcher.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object DataModule {
@@ -55,6 +59,9 @@ object DataModule {
     private const val USER_PREFERENCES_NAME = "user_preferences"
 }
 
+/**
+ * A Hilt module that binds data source implementations to their respective interfaces.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 interface DataModuleBinder {

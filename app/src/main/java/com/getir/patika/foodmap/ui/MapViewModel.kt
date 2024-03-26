@@ -1,7 +1,8 @@
-package com.getir.patika.foodmap
+package com.getir.patika.foodmap.ui
 
 import android.annotation.SuppressLint
 import androidx.lifecycle.viewModelScope
+import com.getir.patika.foodmap.BaseViewModel
 import com.getir.patika.foodmap.data.LocationRepository
 import com.getir.patika.foodmap.data.PreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,6 +14,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel responsible for handling the map-related logic and user interactions.
+ * It communicates with [LocationRepository] and [PreferencesRepository] to fetch and store data.
+ *
+ * @property locationRepository Repository for location-related operations.
+ * @property preferencesRepository Repository for managing user preferences.
+ */
 @HiltViewModel
 class MapViewModel @Inject constructor(
     private val locationRepository: LocationRepository,
@@ -28,6 +36,11 @@ class MapViewModel @Inject constructor(
     val dialogState: Boolean
         get() = uiState.value.dialogState
 
+    /**
+     * Handles the logic for updating the query text and triggering a place search.
+     *
+     * @param query The search query text entered by the user.
+     */
     fun onQueryTextChange(query: String?) = viewModelScope.launch {
         _uiState.update { it.copy(query = query ?: "") }
         query?.let { searchPlaces(it) }
@@ -46,7 +59,6 @@ class MapViewModel @Inject constructor(
             _uiState.update { it.copy(locationResult = uiState.value.currentLocationResult) }
             return@launchCatching
         }
-
 
         val locationResult = locationRepository.getCurrentLocation()
         _uiState.update {
