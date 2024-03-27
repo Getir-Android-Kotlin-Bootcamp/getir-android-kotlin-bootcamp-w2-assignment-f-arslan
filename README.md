@@ -11,9 +11,9 @@
 <img src="public/demo.gif" height="700" alt="Demo">
 </div>
 
-### If you want to download the video, [click here](public/demo.mp4)
-### You can check the documentation [here](public/doc/index.md)
-
+#### You can download the release apk [here](public/app-release.apk)
+#### If you want to download the video, [click here](public/demo.mp4)
+#### You can check the documentation [here](public/doc/index.md)
 ---
 <br>
 
