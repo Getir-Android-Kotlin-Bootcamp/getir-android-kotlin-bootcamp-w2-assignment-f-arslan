@@ -1,4 +1,4 @@
-package com.getir.patika.foodmap.data.ext
+package com.getir.patika.foodmap.ext
 
 import android.content.Context
 import android.content.Intent

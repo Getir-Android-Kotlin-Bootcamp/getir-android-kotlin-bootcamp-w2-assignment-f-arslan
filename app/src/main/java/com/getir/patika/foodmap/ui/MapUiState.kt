@@ -26,4 +26,8 @@ sealed class LocationResult {
     data object Loading : LocationResult()
     data class Success(val location: Location) : LocationResult()
     data class Error(val errorMessage: String) : LocationResult()
+
+    fun toErrorState(errorMessage: String): LocationResult {
+        return Error(errorMessage)
+    }
 }

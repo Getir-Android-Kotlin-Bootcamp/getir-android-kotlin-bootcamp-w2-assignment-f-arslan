@@ -4,10 +4,16 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.location.LocationManager
 import android.util.Log
+import com.getir.patika.foodmap.data.LocationRepository
+import com.getir.patika.foodmap.ext.toLocationState
 import com.getir.patika.foodmap.ui.AutoCompleteResult
 import com.getir.patika.foodmap.ui.LocationResult
-import com.getir.patika.foodmap.data.LocationRepository
-import com.getir.patika.foodmap.data.ext.toLocationState
+import com.getir.patika.foodmap.util.Utils.COORDINATE_NOT_FOUND
+import com.getir.patika.foodmap.util.Utils.GENERIC_ERROR
+import com.getir.patika.foodmap.util.Utils.GPS_NOT_ENABLED
+import com.getir.patika.foodmap.util.Utils.PLACE_NOT_FOUND
+import com.getir.patika.foodmap.util.Utils.failedToFetchCurrentLocation
+import com.getir.patika.foodmap.util.Utils.failedToFetchPlaceDetails
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
@@ -35,9 +41,7 @@ class LocationDataSource @Inject constructor(
 
     @SuppressLint("MissingPermission")
     override suspend fun getCurrentLocation(): LocationResult = withContext(ioDispatcher) {
-        if (!isGpsEnabled()) {
-            return@withContext LocationResult.Error("GPS is not enabled")
-        }
+        if (!isGpsEnabled()) return@withContext LocationResult.Error(GPS_NOT_ENABLED)
 
         val completableDeferred = CompletableDeferred<LocationResult>()
         val placeFields = listOf(Place.Field.LAT_LNG, Place.Field.ADDRESS, Place.Field.NAME)
@@ -48,15 +52,15 @@ class LocationDataSource @Inject constructor(
                 response.placeLikelihoods.firstOrNull()?.place?.run {
                     latLng?.run {
                         completableDeferred.complete(toLocationState())
-                    } ?: completableDeferred.complete(LocationResult.Error("LatLng is null"))
-                } ?: completableDeferred.complete(LocationResult.Error("Place not found"))
+                    } ?: completableDeferred.complete(LocationResult.Error(COORDINATE_NOT_FOUND))
+                } ?: completableDeferred.complete(LocationResult.Error(PLACE_NOT_FOUND))
 
             }
             .addOnFailureListener {
                 completableDeferred.complete(
-                    LocationResult.Error("Failed to fetch current location: ${it.message}")
+                    LocationResult.Error(failedToFetchCurrentLocation(it.message))
                 )
-                Log.e("LocationDataSource", "An error occurred", it)
+                Log.e(TAG, GENERIC_ERROR, it)
             }
 
         completableDeferred.await()
@@ -64,9 +68,7 @@ class LocationDataSource @Inject constructor(
 
     override suspend fun getPlaceDetails(placeId: String): LocationResult =
         withContext(ioDispatcher) {
-            if (!isGpsEnabled()) {
-                return@withContext LocationResult.Error("GPS is not enabled")
-            }
+            if (!isGpsEnabled()) return@withContext LocationResult.Error(GPS_NOT_ENABLED)
 
             val completableDeferred = CompletableDeferred<LocationResult>()
 
@@ -77,14 +79,14 @@ class LocationDataSource @Inject constructor(
                     if (response != null && response.place.latLng != null) {
                         completableDeferred.complete(response.place.toLocationState())
                     } else {
-                        completableDeferred.complete(LocationResult.Error("Place not found"))
+                        completableDeferred.complete(LocationResult.Error(PLACE_NOT_FOUND))
                     }
                 }
                 .addOnFailureListener {
                     completableDeferred.complete(
-                        LocationResult.Error("Failed to fetch place details: ${it.message}")
+                        LocationResult.Error(failedToFetchPlaceDetails(it.message))
                     )
-                    Log.e("LocationDataSource", "An error occurred", it)
+                    Log.e(TAG, GENERIC_ERROR, it)
                 }
 
             completableDeferred.await()
@@ -113,7 +115,7 @@ class LocationDataSource @Inject constructor(
                     }
                 }.addOnFailureListener {
                     completeDeferred.complete(emptyList())
-                    Log.e("LocationDataSource", "An error occurred", it)
+                    Log.e(TAG, GENERIC_ERROR, it)
                 }
 
             completeDeferred.await()
@@ -124,5 +126,9 @@ class LocationDataSource @Inject constructor(
             context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
                 locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    }
+
+    companion object {
+        private const val TAG = "LocationDataSource"
     }
 }

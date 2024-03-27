@@ -1,4 +1,4 @@
-package com.getir.patika.foodmap.data.ext
+package com.getir.patika.foodmap.ext
 
 import com.getir.patika.foodmap.ui.Location
 import com.getir.patika.foodmap.ui.LocationResult
