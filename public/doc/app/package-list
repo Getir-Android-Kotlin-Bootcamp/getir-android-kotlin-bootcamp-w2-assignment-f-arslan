@@ -31,10 +31,9 @@ $dokka.location:com.getir.patika.foodmap.data/PreferencesRepository/getGreetingD
 $dokka.location:com.getir.patika.foodmap.data/PreferencesRepository/setGreetingDialogState/#/PointingToDeclaration/app/com.getir.patika.foodmap.data/-preferences-repository/set-greeting-dialog-state.md
 $dokka.location:com.getir.patika.foodmap.ext////PointingToDeclaration/app/com.getir.patika.foodmap.ext/index.md
 $dokka.location:com.getir.patika.foodmap.ext//greetingRationaleDialog/android.content.Context#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/app/com.getir.patika.foodmap.ext/greeting-rationale-dialog.md
-$dokka.location:com.getir.patika.foodmap.ext//makeSnackbar/[Error type: Unresolved type for ActivityMainBinding]#kotlin.String/PointingToDeclaration/app/com.getir.patika.foodmap.ext/make-snackbar.md
+$dokka.location:com.getir.patika.foodmap.ext//makeSnackbar/[Error type: Unresolved type for FragmentMapsBinding]#kotlin.String/PointingToDeclaration/app/com.getir.patika.foodmap.ext/make-snackbar.md
 $dokka.location:com.getir.patika.foodmap.ext//makeToast/android.content.Context#kotlin.Int/PointingToDeclaration/app/com.getir.patika.foodmap.ext/make-toast.md
 $dokka.location:com.getir.patika.foodmap.ext//openSettingsRationaleDialog/android.content.Context#/PointingToDeclaration/app/com.getir.patika.foodmap.ext/open-settings-rationale-dialog.md
-$dokka.location:com.getir.patika.foodmap.ext//setCustomFont/android.widget.SearchView#/PointingToDeclaration/app/com.getir.patika.foodmap.ext/set-custom-font.md
 $dokka.location:com.getir.patika.foodmap.ext//toBitmapDescriptor/kotlin.Int#android.content.Context/PointingToDeclaration/app/com.getir.patika.foodmap.ext/to-bitmap-descriptor.md
 $dokka.location:com.getir.patika.foodmap.ext//toLocationState/com.google.android.libraries.places.api.model.Place#/PointingToDeclaration/app/com.getir.patika.foodmap.ext/to-location-state.md
 $dokka.location:com.getir.patika.foodmap.ui////PointingToDeclaration/app/com.getir.patika.foodmap.ui/index.md
@@ -69,12 +68,8 @@ $dokka.location:com.getir.patika.foodmap.ui/LocationResult.Success/Success/#com.
 $dokka.location:com.getir.patika.foodmap.ui/LocationResult.Success/location/#/PointingToDeclaration/app/com.getir.patika.foodmap.ui/-location-result/-success/location.md
 $dokka.location:com.getir.patika.foodmap.ui/LocationResult///PointingToDeclaration/app/com.getir.patika.foodmap.ui/-location-result/index.md
 $dokka.location:com.getir.patika.foodmap.ui/LocationResult/toErrorState/#kotlin.String/PointingToDeclaration/app/com.getir.patika.foodmap.ui/-location-result/to-error-state.md
-$dokka.location:com.getir.patika.foodmap.ui/MainActivity.Companion///PointingToDeclaration/app/com.getir.patika.foodmap.ui/-main-activity/-companion/index.md
 $dokka.location:com.getir.patika.foodmap.ui/MainActivity///PointingToDeclaration/app/com.getir.patika.foodmap.ui/-main-activity/index.md
 $dokka.location:com.getir.patika.foodmap.ui/MainActivity/MainActivity/#/PointingToDeclaration/app/com.getir.patika.foodmap.ui/-main-activity/-main-activity.md
-$dokka.location:com.getir.patika.foodmap.ui/MainActivity/onMapReady/#com.google.android.gms.maps.GoogleMap/PointingToDeclaration/app/com.getir.patika.foodmap.ui/-main-activity/on-map-ready.md
-$dokka.location:com.getir.patika.foodmap.ui/MainActivity/onRequestPermissionsResult/#kotlin.Int#kotlin.Array[kotlin.String]#kotlin.IntArray/PointingToDeclaration/app/com.getir.patika.foodmap.ui/-main-activity/on-request-permissions-result.md
-$dokka.location:com.getir.patika.foodmap.ui/MainActivity/viewModel/#/PointingToDeclaration/app/com.getir.patika.foodmap.ui/-main-activity/view-model.md
 $dokka.location:com.getir.patika.foodmap.ui/MapUiState///PointingToDeclaration/app/com.getir.patika.foodmap.ui/-map-ui-state/index.md
 $dokka.location:com.getir.patika.foodmap.ui/MapUiState/MapUiState/#kotlin.Boolean#kotlin.String#kotlin.String#com.getir.patika.foodmap.ui.LocationResult#com.getir.patika.foodmap.ui.LocationResult#kotlin.Boolean/PointingToDeclaration/app/com.getir.patika.foodmap.ui/-map-ui-state/-map-ui-state.md
 $dokka.location:com.getir.patika.foodmap.ui/MapUiState/currentLocationResult/#/PointingToDeclaration/app/com.getir.patika.foodmap.ui/-map-ui-state/current-location-result.md
@@ -92,6 +87,13 @@ $dokka.location:com.getir.patika.foodmap.ui/MapViewModel/getPlaceDetails/#com.ge
 $dokka.location:com.getir.patika.foodmap.ui/MapViewModel/onQueryTextChange/#kotlin.String?/PointingToDeclaration/app/com.getir.patika.foodmap.ui/-map-view-model/on-query-text-change.md
 $dokka.location:com.getir.patika.foodmap.ui/MapViewModel/setDialogState/#/PointingToDeclaration/app/com.getir.patika.foodmap.ui/-map-view-model/set-dialog-state.md
 $dokka.location:com.getir.patika.foodmap.ui/MapViewModel/uiState/#/PointingToDeclaration/app/com.getir.patika.foodmap.ui/-map-view-model/ui-state.md
+$dokka.location:com.getir.patika.foodmap.ui/MapsFragment.Companion///PointingToDeclaration/app/com.getir.patika.foodmap.ui/-maps-fragment/-companion/index.md
+$dokka.location:com.getir.patika.foodmap.ui/MapsFragment///PointingToDeclaration/app/com.getir.patika.foodmap.ui/-maps-fragment/index.md
+$dokka.location:com.getir.patika.foodmap.ui/MapsFragment/MapsFragment/#/PointingToDeclaration/app/com.getir.patika.foodmap.ui/-maps-fragment/-maps-fragment.md
+$dokka.location:com.getir.patika.foodmap.ui/MapsFragment/onCreateView/#android.view.LayoutInflater#android.view.ViewGroup?#android.os.Bundle?/PointingToDeclaration/app/com.getir.patika.foodmap.ui/-maps-fragment/on-create-view.md
+$dokka.location:com.getir.patika.foodmap.ui/MapsFragment/onDestroyView/#/PointingToDeclaration/app/com.getir.patika.foodmap.ui/-maps-fragment/on-destroy-view.md
+$dokka.location:com.getir.patika.foodmap.ui/MapsFragment/onViewCreated/#android.view.View#android.os.Bundle?/PointingToDeclaration/app/com.getir.patika.foodmap.ui/-maps-fragment/on-view-created.md
+$dokka.location:com.getir.patika.foodmap.ui/MapsFragment/viewModel/#/PointingToDeclaration/app/com.getir.patika.foodmap.ui/-maps-fragment/view-model.md
 $dokka.location:com.getir.patika.foodmap.util////PointingToDeclaration/app/com.getir.patika.foodmap.util/index.md
 $dokka.location:com.getir.patika.foodmap.util/Utils///PointingToDeclaration/app/com.getir.patika.foodmap.util/-utils/index.md
 $dokka.location:com.getir.patika.foodmap.util/Utils/COORDINATE_NOT_FOUND/#/PointingToDeclaration/app/com.getir.patika.foodmap.util/-utils/-c-o-o-r-d-i-n-a-t-e_-n-o-t_-f-o-u-n-d.md
