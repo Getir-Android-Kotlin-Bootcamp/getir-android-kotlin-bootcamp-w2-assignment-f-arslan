@@ -1,10 +1,10 @@
 package com.getir.patika.foodmap.ext
 
 import android.view.ViewGroup
-import com.getir.patika.foodmap.databinding.ActivityMainBinding
+import com.getir.patika.foodmap.databinding.FragmentMapsBinding
 import com.google.android.material.snackbar.Snackbar
 
-fun ActivityMainBinding.makeSnackbar(text: String) {
+fun FragmentMapsBinding.makeSnackbar(text: String) {
     val snackbar = Snackbar.make(this.root, text, Snackbar.LENGTH_SHORT)
     val snackbarView = snackbar.view
     val params = snackbarView.layoutParams as ViewGroup.MarginLayoutParams

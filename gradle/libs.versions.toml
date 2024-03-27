@@ -17,6 +17,7 @@ placesKtx = "3.1.1"
 datastorePreferences = "1.0.0"
 hilt = "2.51"
 ksp = "1.9.23-1.0.19"
+androidx-fragment = "1.6.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -31,10 +32,11 @@ play-services-maps = { group = "com.google.android.gms", name = "play-services-m
 lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle_version" }
 androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activity" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
-places-ktx = { group = "com.google.maps.android" , name = "places-ktx", version.ref = "placesKtx" }
+places-ktx = { group = "com.google.maps.android", name = "places-ktx", version.ref = "placesKtx" }
 datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+androidx-fragment = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "androidx-fragment" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

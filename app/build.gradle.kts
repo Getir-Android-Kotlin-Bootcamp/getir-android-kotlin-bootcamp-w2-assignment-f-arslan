@@ -60,6 +60,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.datastore.preferences)
+    implementation(libs.androidx.fragment)
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 }

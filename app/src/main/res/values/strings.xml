@@ -6,16 +6,15 @@
     <string name="where_is_your_location">Where is your location</string>
     <string name="ring_button">ring button</string>
     <string name="location_dialog_title">Permission Required</string>
-    <string name="location_dialog_message">This app requires location permission to function properly. Please grant the permission.</string>
-    <string name="greeting_dialog_title">Location Access Needed</string>
-    <string name="greeting_dialog_message">To quickly find your current location and improve your experience, we need location permissions. \n\nFor better results, choose Precise location. Grant access?</string>
+    <string name="location_dialog_message">This app requires permission to access your current location. Please grant the permission.</string>
+    <string name="greeting_dialog_title">Access Needed</string>
+    <string name="greeting_dialog_message">To quickly find your current location and improve your experience, we need location permissions.\n\nFor better results, choose Precise location. Grant access?</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="open_settings">Open Settings</string>
     <string name="ring_button_click">Ring button clicked</string>
     <string name="back_button_click">Back button clicked</string>
     <string name="set_location_button_click">Set Location button clicked</string>
-
     <string name="api_key">AIzaSyAtDzn22GbQUw-kKjvr_RExXqyuXjEsdHE</string>
     <string name="your_location">Your Location</string>
     <string name="pin">pin</string>

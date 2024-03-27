@@ -2,11 +2,13 @@ package com.getir.patika.foodmap.ext
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Typeface
 import android.net.Uri
 import android.provider.Settings
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.core.content.res.ResourcesCompat
 import com.getir.patika.foodmap.R
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -50,7 +52,8 @@ fun Context.openSettingsRationaleDialog() {
 fun Context.greetingRationaleDialog(onPositiveButtonClick: () -> Unit) {
     val messageTextView = TextView(this).apply {
         setText(R.string.greeting_dialog_message)
-        textSize = 16f
+        textSize = 15f
+        typeface = ResourcesCompat.getFont(this@greetingRationaleDialog, R.font.poppins_medium)
         setPadding(32, 32, 32, 0)
     }
 
@@ -66,9 +69,6 @@ fun Context.greetingRationaleDialog(onPositiveButtonClick: () -> Unit) {
         .show()
 }
 
-
 fun Context.makeToast(@StringRes textId: Int) {
     Toast.makeText(this, textId, Toast.LENGTH_SHORT).show()
 }
-
-
