@@ -1,6 +1,4 @@
-//[app](index.md)
-
-# app
+# Food Map
 
 ## Packages
 
