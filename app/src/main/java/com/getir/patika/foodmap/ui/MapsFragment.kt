@@ -12,7 +12,6 @@ import android.widget.SearchView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -40,21 +39,15 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MapsFragment : Fragment() {
-    private var _binding: FragmentMapsBinding? = null
-    private val binding get() = _binding!!
-    private var mMap: GoogleMap? = null
+class MapsFragment : BaseFragment<FragmentMapsBinding>() {
 
     val viewModel: MapViewModel by viewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentMapsBinding.inflate(inflater, container, false)
+    override fun getBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentMapsBinding =
+        FragmentMapsBinding.inflate(inflater, container, false)
+
+    override fun initializeViews() {
         setupFragment()
-        return binding.root
     }
 
     private fun setupFragment() {
@@ -127,6 +120,7 @@ class MapsFragment : Fragment() {
         }
     }
 
+    private var mMap: GoogleMap? = null
     private var currentMarker: Marker? = null
     private fun FragmentMapsBinding.observeLocationChanges() = scopeWithLifecycle {
         val pinIcon: BitmapDescriptor = R.drawable.pin.toBitmapDescriptor(requireContext())
@@ -248,14 +242,6 @@ class MapsFragment : Fragment() {
                     requireContext(),
                     COARSE_LOCATION
                 ) == PackageManager.PERMISSION_GRANTED
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mMap = null
-        initialMarker = null
-        currentMarker = null
-        _binding = null
     }
 
     companion object {
