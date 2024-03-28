@@ -7,7 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 
-abstract class BaseFragment<T : ViewBinding>() : Fragment() {
+/**
+ * Abstract base fragment that provides a standardized way to use view binding in fragments.
+ *
+ * This class handles the lifecycle of the view binding, ensuring it is cleared when the view is destroyed to prevent memory leaks.
+ *
+ * @param T The type of the view binding associated with the fragment.
+ */
+abstract class BaseFragment<T : ViewBinding> : Fragment() {
     private var _binding: T? = null
     protected val binding get() = _binding!!
 
@@ -21,8 +28,18 @@ abstract class BaseFragment<T : ViewBinding>() : Fragment() {
         return binding.root
     }
 
+    /**
+     * Abstract method that must be implemented by subclasses to initialize their views.
+     */
     protected abstract fun initializeViews()
 
+    /**
+     * Abstract method that must be implemented by subclasses to provide the view binding.
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate the view binding.
+     * @param container The parent view that the fragment's UI should be attached to.
+     * @return The initialized view binding for the fragment.
+     */
     protected abstract fun getBinding(inflater: LayoutInflater, container: ViewGroup?): T
 
     override fun onDestroyView() {
