@@ -4,7 +4,7 @@ import com.getir.patika.foodmap.ui.Location
 import com.getir.patika.foodmap.ui.LocationResult
 import com.google.android.libraries.places.api.model.Place
 
-fun Place.toLocationState(): LocationResult {
+fun Place.toSuccessLocationResult(): LocationResult {
     val latLng = requireNotNull(latLng) { "LatLng is null" }
     return LocationResult.Success(
         Location(

@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
+        setContentView(view)
 
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
@@ -29,7 +30,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        setContentView(view)
         handleInsets()
     }
 

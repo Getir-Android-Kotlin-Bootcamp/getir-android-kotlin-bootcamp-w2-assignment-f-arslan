@@ -5,7 +5,7 @@ import android.content.Context
 import android.location.LocationManager
 import android.util.Log
 import com.getir.patika.foodmap.data.LocationRepository
-import com.getir.patika.foodmap.ext.toLocationState
+import com.getir.patika.foodmap.ext.toSuccessLocationResult
 import com.getir.patika.foodmap.ui.AutoCompleteResult
 import com.getir.patika.foodmap.ui.LocationResult
 import com.getir.patika.foodmap.util.Utils.COORDINATE_NOT_FOUND
@@ -51,7 +51,7 @@ class LocationDataSource @Inject constructor(
             .addOnSuccessListener { response ->
                 response.placeLikelihoods.firstOrNull()?.place?.run {
                     latLng?.run {
-                        completableDeferred.complete(toLocationState())
+                        completableDeferred.complete(toSuccessLocationResult())
                     } ?: completableDeferred.complete(LocationResult.Error(COORDINATE_NOT_FOUND))
                 } ?: completableDeferred.complete(LocationResult.Error(PLACE_NOT_FOUND))
 
@@ -77,7 +77,7 @@ class LocationDataSource @Inject constructor(
             placesClient.fetchPlace(request)
                 .addOnSuccessListener { response ->
                     if (response != null && response.place.latLng != null) {
-                        completableDeferred.complete(response.place.toLocationState())
+                        completableDeferred.complete(response.place.toSuccessLocationResult())
                     } else {
                         completableDeferred.complete(LocationResult.Error(PLACE_NOT_FOUND))
                     }
