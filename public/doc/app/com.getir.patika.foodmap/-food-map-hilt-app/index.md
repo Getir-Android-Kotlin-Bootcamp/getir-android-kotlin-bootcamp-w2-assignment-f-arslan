@@ -1,15 +1,15 @@
-//[app](../../../index.md)/[com.getir.patika.foodmap](../index.md)/[FoodDeliveryHiltApp](index.md)
+//[app](../../../index.md)/[com.getir.patika.foodmap](../index.md)/[FoodMapHiltApp](index.md)
 
-# FoodDeliveryHiltApp
+# FoodMapHiltApp
 
 [androidJvm]\
-class [FoodDeliveryHiltApp](index.md) : [Application](https://developer.android.com/reference/kotlin/android/app/Application.html)
+class [FoodMapHiltApp](index.md) : [Application](https://developer.android.com/reference/kotlin/android/app/Application.html)
 
 ## Constructors
 
 | | |
 |---|---|
-| [FoodDeliveryHiltApp](-food-delivery-hilt-app.md) | [androidJvm]<br>constructor() |
+| [FoodMapHiltApp](-food-map-hilt-app.md) | [androidJvm]<br>constructor() |
 
 ## Functions
 

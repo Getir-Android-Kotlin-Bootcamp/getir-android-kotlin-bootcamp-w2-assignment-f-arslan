@@ -52,10 +52,6 @@ $dokka.location:com.getir.patika.foodmap.ui/AutoCompleteResult///PointingToDecla
 $dokka.location:com.getir.patika.foodmap.ui/AutoCompleteResult/AutoCompleteResult/#kotlin.String#kotlin.String/PointingToDeclaration/app/com.getir.patika.foodmap.ui/-auto-complete-result/-auto-complete-result.md
 $dokka.location:com.getir.patika.foodmap.ui/AutoCompleteResult/fullText/#/PointingToDeclaration/app/com.getir.patika.foodmap.ui/-auto-complete-result/full-text.md
 $dokka.location:com.getir.patika.foodmap.ui/AutoCompleteResult/placeId/#/PointingToDeclaration/app/com.getir.patika.foodmap.ui/-auto-complete-result/place-id.md
-$dokka.location:com.getir.patika.foodmap.ui/BaseFragment///PointingToDeclaration/app/com.getir.patika.foodmap.ui/-base-fragment/index.md
-$dokka.location:com.getir.patika.foodmap.ui/BaseFragment/BaseFragment/#/PointingToDeclaration/app/com.getir.patika.foodmap.ui/-base-fragment/-base-fragment.md
-$dokka.location:com.getir.patika.foodmap.ui/BaseFragment/onCreateView/#android.view.LayoutInflater#android.view.ViewGroup?#android.os.Bundle?/PointingToDeclaration/app/com.getir.patika.foodmap.ui/-base-fragment/on-create-view.md
-$dokka.location:com.getir.patika.foodmap.ui/BaseFragment/onDestroyView/#/PointingToDeclaration/app/com.getir.patika.foodmap.ui/-base-fragment/on-destroy-view.md
 $dokka.location:com.getir.patika.foodmap.ui/Location///PointingToDeclaration/app/com.getir.patika.foodmap.ui/-location/index.md
 $dokka.location:com.getir.patika.foodmap.ui/Location/Location/#kotlin.Double#kotlin.Double#kotlin.String#kotlin.String/PointingToDeclaration/app/com.getir.patika.foodmap.ui/-location/-location.md
 $dokka.location:com.getir.patika.foodmap.ui/Location/address/#/PointingToDeclaration/app/com.getir.patika.foodmap.ui/-location/address.md
@@ -105,11 +101,16 @@ $dokka.location:com.getir.patika.foodmap.util/Utils/PLACE_NOT_FOUND/#/PointingTo
 $dokka.location:com.getir.patika.foodmap.util/Utils/failedToFetchCurrentLocation/#/PointingToDeclaration/app/com.getir.patika.foodmap.util/-utils/failed-to-fetch-current-location.md
 $dokka.location:com.getir.patika.foodmap.util/Utils/failedToFetchPlaceDetails/#/PointingToDeclaration/app/com.getir.patika.foodmap.util/-utils/failed-to-fetch-place-details.md
 $dokka.location:com.getir.patika.foodmap////PointingToDeclaration/app/com.getir.patika.foodmap/index.md
+$dokka.location:com.getir.patika.foodmap/BaseFragment///PointingToDeclaration/app/com.getir.patika.foodmap/-base-fragment/index.md
+$dokka.location:com.getir.patika.foodmap/BaseFragment/BaseFragment/#/PointingToDeclaration/app/com.getir.patika.foodmap/-base-fragment/-base-fragment.md
+$dokka.location:com.getir.patika.foodmap/BaseFragment/onCreateView/#android.view.LayoutInflater#android.view.ViewGroup?#android.os.Bundle?/PointingToDeclaration/app/com.getir.patika.foodmap/-base-fragment/on-create-view.md
+$dokka.location:com.getir.patika.foodmap/BaseFragment/onDestroyView/#/PointingToDeclaration/app/com.getir.patika.foodmap/-base-fragment/on-destroy-view.md
+$dokka.location:com.getir.patika.foodmap/BaseFragment/onViewCreated/#android.view.View#android.os.Bundle?/PointingToDeclaration/app/com.getir.patika.foodmap/-base-fragment/on-view-created.md
 $dokka.location:com.getir.patika.foodmap/BaseViewModel///PointingToDeclaration/app/com.getir.patika.foodmap/-base-view-model/index.md
 $dokka.location:com.getir.patika.foodmap/BaseViewModel/BaseViewModel/#/PointingToDeclaration/app/com.getir.patika.foodmap/-base-view-model/-base-view-model.md
 $dokka.location:com.getir.patika.foodmap/BaseViewModel/launchCatching/#kotlin.coroutines.SuspendFunction1[kotlinx.coroutines.CoroutineScope,kotlin.Unit]/PointingToDeclaration/app/com.getir.patika.foodmap/-base-view-model/launch-catching.md
-$dokka.location:com.getir.patika.foodmap/FoodDeliveryHiltApp///PointingToDeclaration/app/com.getir.patika.foodmap/-food-delivery-hilt-app/index.md
-$dokka.location:com.getir.patika.foodmap/FoodDeliveryHiltApp/FoodDeliveryHiltApp/#/PointingToDeclaration/app/com.getir.patika.foodmap/-food-delivery-hilt-app/-food-delivery-hilt-app.md
+$dokka.location:com.getir.patika.foodmap/FoodMapHiltApp///PointingToDeclaration/app/com.getir.patika.foodmap/-food-map-hilt-app/index.md
+$dokka.location:com.getir.patika.foodmap/FoodMapHiltApp/FoodMapHiltApp/#/PointingToDeclaration/app/com.getir.patika.foodmap/-food-map-hilt-app/-food-map-hilt-app.md
 com.getir.patika.foodmap
 com.getir.patika.foodmap.data
 com.getir.patika.foodmap.data.di
