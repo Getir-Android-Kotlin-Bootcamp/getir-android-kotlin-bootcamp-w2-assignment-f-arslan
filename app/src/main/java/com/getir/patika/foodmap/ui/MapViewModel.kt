@@ -50,6 +50,7 @@ class MapViewModel @Inject constructor(
         initializePreferences()
     }
 
+    private var currentLocationJob: Job? = null
     @SuppressLint("MissingPermission")
     fun getCurrentLocation() = launchCatching {
         _uiState.update { it.copy(locationResult = LocationResult.Loading) }
@@ -60,12 +61,16 @@ class MapViewModel @Inject constructor(
             return@launchCatching
         }
 
-        val locationResult = locationRepository.getCurrentLocation()
-        _uiState.update {
-            it.copy(
-                locationResult = locationResult,
-                currentLocationResult = locationResult
-            )
+        currentLocationJob?.cancel()
+
+        currentLocationJob = launchCatching {
+            val locationResult = locationRepository.getCurrentLocation()
+            _uiState.update {
+                it.copy(
+                    locationResult = locationResult,
+                    currentLocationResult = locationResult
+                )
+            }
         }
     }
 

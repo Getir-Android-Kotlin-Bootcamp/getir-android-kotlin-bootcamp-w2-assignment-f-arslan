@@ -16,6 +16,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.getir.patika.foodmap.BaseFragment
 import com.getir.patika.foodmap.R
 import com.getir.patika.foodmap.databinding.FragmentMapsBinding
 import com.getir.patika.foodmap.ext.greetingRationaleDialog

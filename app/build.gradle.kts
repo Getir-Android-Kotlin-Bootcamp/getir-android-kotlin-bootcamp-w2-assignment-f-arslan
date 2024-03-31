@@ -59,6 +59,7 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.viewbinding)
     implementation(libs.datastore.preferences)
     implementation(libs.androidx.fragment)
     implementation(libs.hilt.android)

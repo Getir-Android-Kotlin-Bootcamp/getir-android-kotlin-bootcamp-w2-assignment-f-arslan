@@ -1,4 +1,4 @@
-package com.getir.patika.foodmap.ui
+package com.getir.patika.foodmap
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,14 +24,13 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = getBinding(inflater, container)
-        initializeViews()
         return binding.root
     }
 
-    /**
-     * Abstract method that must be implemented by subclasses to initialize their views.
-     */
-    protected abstract fun initializeViews()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initializeViews()
+    }
 
     /**
      * Abstract method that must be implemented by subclasses to provide the view binding.
@@ -41,6 +40,11 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
      * @return The initialized view binding for the fragment.
      */
     protected abstract fun getBinding(inflater: LayoutInflater, container: ViewGroup?): T
+
+    /**
+     * Abstract method that must be implemented by subclasses to initialize their views.
+     */
+    protected abstract fun initializeViews()
 
     override fun onDestroyView() {
         super.onDestroyView()
